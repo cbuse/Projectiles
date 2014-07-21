@@ -1,67 +1,100 @@
 package FileParser;
 
+import java.io.BufferedReader;
+
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
-import Screen.Screen;
-
-/***
- * 
- * @author Cristina Buse
- * 
- * Opens a file for writing and writes a matrix in it.
- *
+/**
+ * Opens a file for reading and provides a stream of words resulting from its parsing.
  */
-public class WriteFile {
-	FileWriter writer;
+public final class FileParser {
+
 	String filePath;
-	
-	public WriteFile(String filePath) {
+	BufferedReader reader;
+	FileWriter writer;
+	Queue<String> wordBuffer;
+
+	public FileParser(String filePath) {
 		this.filePath = filePath;
-		this.writer = null;
-		
+		this.reader = null;
+		this.wordBuffer = new LinkedList<String>();
 	}
-	
+
+	/**
+	 * Opens the file for reading.
+	 * <p>
+	 * This operation must be performed before calling any other methods on this object.
+	 */
 	public void open() {
-		if (writer != null) {
+		if (reader != null) {
 			throw new IllegalStateException("File already opened for reading");
 		}
 		try {
-			
-			writer = new FileWriter(filePath);
+			reader = new BufferedReader(new FileReader(filePath));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	/**
+	 * Closes the file opened for reading.
+	 * <p>
+	 * Should be called after finishing reading.
+	 */
 	public void close() {
-		
-		if (writer != null) {
+		wordBuffer.clear();
+		if (reader != null) {
 			try {
-				writer.close();
+				reader.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 	}
-	
-	public  void write(Screen screen) {
 
-	    try {
+	/**
+	 * Parses the underlying file and returns the next word.
+	 *
+	 * @return a word as a <code>String<code>, or <code>null<code> if the end of the file has been
+	 * reached.
+	 */
+	public String getNextWord() {
 
-	        for(int i = 0; i < screen.getMatrix()[0].length; i++) {
-				for(int j = 0; j < screen.getMatrix().length; j++) {
-					String c = screen.getMatrix()[i][j] + "";
-					writer.write(c);
-					writer.flush();
-				}	
-				writer.write('\n');
+		if (!wordBuffer.isEmpty()) {
+			return wordBuffer.poll();
+		}
+
+		// refill word buffer
+		String[] nextWords = new String[0];
+		while (nextWords.length == 0) {
+			nextWords = parseNextLine();
+			if (nextWords == null) {
+				return null;
 			}
-	        
-	        
-	    } catch(IOException ex) {
-	        ex.printStackTrace();
-	    }	    
+		}
+		wordBuffer.addAll(Arrays.asList(nextWords));
+		return wordBuffer.poll();
+	}
+
+	private String[] parseNextLine() {
+		String line;
+		try {
+			line = reader.readLine();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		if (line == null) {
+			return null;
+		}
+		return line.toLowerCase().split(" ");
 	}
 }
+
+
+

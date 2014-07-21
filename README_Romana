@@ -1,0 +1,41 @@
+Buse Elena-Cristina, 321CA
+	
+	Am folosit scheletul de cod, care mi-a fost de mare ajutor si m-a condus
+spre solutie. De asemenea, am refolosit clasa "FileParser" din tema 1, cu mici
+modificari.
+	
+	Fiecare proiectil mosteneste clasa abstracta "Projectile" si ii implementeaza 
+separat metodele.	
+
+	Functia "shoot" presupune calcularea distantelor necesare corodarii
+unui proiectil, apoi verificarea starii proiectilului in momentul in care atinge
+ecranul. In functie de starea proiectilului in momentul in care loveste ecranul,
+calculez deplasarea centrului de greutate si cu cat de modifica referinta
+(shapeChangingDist). De asemenea, instantiez forma(shape) pe care o va lasa proiectilul
+pe ecran.
+	Functia "hitScreenAction" calculeaza noua referinta a formei care va fi
+proiectata pe ecran si deseneaza forma pe ecran. Aceasta functie este identica la
+toate proiectilele.
+	Am exemplificat prin comentarii felul in care am procedat cu CannisterShot.
+Comentariile din clasa sunt si mai sugestive. Celelalte proiectile sunt similare.
+
+
+	Fiecare forma geometrica mosteneste clasa abstracta "BasicShape" si ii 
+implementeaza metoda. Mai intai calculez coordonatele varfurilor formei in functie
+de centrul de greutate si referinta, formez vectorii cu punctele de inceput si 
+de final ale segmentelor care vor contureaza forma, apoi o desenez cu ajutorul
+functiei "drawMultipleLinesOnScreen".
+	
+	Alte functii pe care le-am adaugat la scheletul temei:
+	Am implementat metodele si constructorul din clasa Screen, asa cum au fost 
+sugerate de antet. Am mai facut o metoda "getMatrix()", care intoarce matricea-
+ecran.
+	In clasa Point am implementat metoda "trans" care muta un punct P de
+coordonate x si y.
+	De asemenea, am mai implementat si clasa "WriteFile", care scrie intr-un
+fisier.
+
+	Realizez ca aceasta varianta de implementare foloseste mult cod duplicat
+si ar fi fost mai usor/recomandabil cu mostenirea sugerata in bonus, dar deja 
+pornisem in acest fel, asa ca nu am mai refacut-o.	
+	
